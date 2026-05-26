@@ -128,3 +128,66 @@ button:active {
 .ball-21 { background: radial-gradient(circle at 30% 30%, #f87171, #b91c1c); }
 .ball-31 { background: radial-gradient(circle at 30% 30%, #9ca3af, #374151); }
 .ball-41 { background: radial-gradient(circle at 30% 30%, #a3e635, #4d7c0f); }
+
+/* 제휴 문의 섹션 스타일 */
+.contact-section {
+    margin-top: 4rem;
+    padding-top: 3rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    text-align: left;
+}
+
+.contact-section h2 {
+    text-align: center;
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.contact-section .subtitle {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.form-group {
+    margin-bottom: 1.2rem;
+}
+
+input, textarea {
+    width: 100%;
+    padding: 12px 16px;
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    color: white;
+    font-family: inherit;
+    font-size: 0.95rem;
+    box-sizing: border-box;
+    transition: all 0.2s;
+}
+
+input:focus, textarea:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    background-color: rgba(255, 255, 255, 0.08);
+}
+
+textarea {
+    height: 120px;
+    resize: vertical;
+}
+
+.submit-btn {
+    width: 100%;
+    margin-bottom: 0;
+    padding: 12px;
+    font-size: 1rem;
+    background-color: transparent;
+    border: 2px solid var(--accent-color);
+    color: var(--accent-color);
+    box-shadow: none;
+}
+
+.submit-btn:hover {
+    background-color: var(--accent-color);
+    color: white;
+}
