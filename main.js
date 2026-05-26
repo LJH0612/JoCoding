@@ -1,84 +1,18 @@
-const DATA = [
-    {
-        title: "전지적 독자 시점",
-        type: "webtoon",
-        genre: "fantasy",
-        mood: "intense",
-        desc: "멸망한 세상에서 유일하게 결말을 아는 독자가 되어 살아남는 법.",
-        link: "https://comic.naver.com/webtoon/list?titleId=747269",
-        img: "https://shared-comic.pstatic.net/thumb/webtoon/747269/thumbnail/thumbnail_IMAG21_3902319088661706680.jpg"
-    },
-    {
-        title: "나 혼자만 레벨업",
-        type: "webtoon",
-        genre: "action",
-        mood: "intense",
-        desc: "최약체에서 최강의 헌터로! 압도적인 작화와 통쾌한 액션.",
-        link: "https://page.kakao.com/content/50866481",
-        img: "https://dn-img-page.kakao.com/download/resource?kid=be9Xdg/hzp2m7S7fU/p9X7X8X8X8X8X8X8X8X8X8"
-    },
-    {
-        title: "유미의 세포들",
-        type: "webtoon",
-        genre: "romance",
-        mood: "heart-warming",
-        desc: "내 머릿속 세포들이 들려주는 유미의 평범하면서도 특별한 이야기.",
-        link: "https://comic.naver.com/webtoon/list?titleId=651673",
-        img: "https://shared-comic.pstatic.net/thumb/webtoon/651673/thumbnail/thumbnail_IMAG21_4041249716752317765.jpg"
-    },
-    {
-        title: "마음의 소리",
-        type: "webtoon",
-        genre: "comedy",
-        mood: "chill",
-        desc: "조석 작가가 그리는 일상의 재해석. 대한민국 코믹 웹툰의 전설.",
-        link: "https://comic.naver.com/webtoon/list?titleId=20853",
-        img: "https://shared-comic.pstatic.net/thumb/webtoon/20853/thumbnail/thumbnail_IMAG21_310243465719331903.jpg"
-    },
-    {
-        title: "데뷔 못 하면 죽는 병 걸림",
-        type: "novel",
-        genre: "fantasy",
-        mood: "chill",
-        desc: "아이돌 서바이벌과 시스템이 결합된 화제의 웹소설.",
-        link: "https://page.kakao.com/content/56325530",
-        img: "https://dn-img-page.kakao.com/download/resource?kid=bNqS6k/hzp2m7S7fU/p9X7X8X8X8X8X8X8X8X8X8"
-    },
-    {
-        title: "화산귀환",
-        type: "novel",
-        genre: "martialarts",
-        mood: "intense",
-        desc: "매화 검존 청명이 백 년 만에 환생하여 무너진 화산파를 다시 일으킨다.",
-        link: "https://series.naver.com/novel/detail.series?productNo=4130558",
-        img: "https://bookthumb-phinf.pstatic.net/cover/147/637/14763784.jpg"
-    },
-    {
-        title: "상수리나무 아래",
-        type: "novel",
-        genre: "romance",
-        mood: "emotional",
-        desc: "말더듬이 영애 리프탄과 대륙 최고의 기사 리프탄의 애절한 판타지 로맨스.",
-        link: "https://ridibooks.com/books/1922000007",
-        img: "https://img.ridicdn.net/cover/1922000007/xxlarge"
-    },
-    {
-        title: "재벌집 막내아들",
-        type: "novel",
-        genre: "drama",
-        mood: "intense",
-        desc: "자신을 죽인 가문의 막내아들로 회귀하여 가문을 통째로 집어삼키는 복수극.",
-        link: "https://series.naver.com/novel/detail.series?productNo=2699298",
-        img: "https://bookthumb-phinf.pstatic.net/cover/121/788/12178873.jpg"
-    }
-];
+const GENRE_MAP = {
+    fantasy: 'FANTASY',
+    action: 'ACTION',
+    romance: 'PURE',
+    martialarts: 'HISTORICAL',
+    comedy: 'COMIC',
+    drama: 'DRAMA'
+};
 
 const quizContainer = document.getElementById('quiz-container');
 const resultContainer = document.getElementById('result-container');
 const quizHeader = document.getElementById('quiz-header');
 
 let currentStep = 0;
-let history = []; // 뒤로가기를 위한 히스토리 저장
+let history = [];
 let answers = {
     type: '',
     genre: '',
@@ -143,7 +77,6 @@ function renderStep() {
 
     stepDiv.appendChild(optionsGrid);
 
-    // 뒤로가기 버튼 (첫 단계가 아닐 때만 표시)
     if (currentStep > 0) {
         const backBtn = document.createElement('button');
         backBtn.className = 'secondary-btn';
@@ -158,50 +91,88 @@ function renderStep() {
 }
 
 function handleChoice(key, value) {
-    history.push({ ...answers }); // 현재 상태 저장
+    history.push({ ...answers });
     answers[key] = value;
     currentStep++;
 
     if (currentStep < steps.length) {
         renderStep();
     } else {
-        showResult();
+        showLoading();
+        fetchRecommendation();
     }
 }
 
 function handleBack() {
     if (currentStep > 0) {
         currentStep--;
-        answers = history.pop(); // 이전 상태 복구
+        answers = history.pop();
         renderStep();
     }
 }
 
-function showResult() {
+function showLoading() {
+    quizContainer.innerHTML = '<div class="quiz-step"><h2>당신을 위한 작품을 찾는 중...</h2><p class="subtitle">실시간 데이터를 가져오고 있습니다.</p></div>';
+}
+
+async function fetchRecommendation() {
+    try {
+        const naverGenre = GENRE_MAP[answers.genre] || 'DRAMA';
+        // AllOrigins CORS Proxy 사용
+        const apiUrl = `https://comic.naver.com/api/webtoon/titlelist/genre?genre=${naverGenre}`;
+        const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(apiUrl)}`;
+        
+        const response = await fetch(proxyUrl);
+        const data = await response.json();
+        const parsedData = JSON.parse(data.contents);
+        
+        const list = parsedData.titleList || [];
+        
+        if (list.length === 0) {
+            throw new Error('No data found');
+        }
+
+        // 결과 중 랜덤하게 하나 선택
+        const randomIndex = Math.floor(Math.random() * list.length);
+        const item = list[randomIndex];
+
+        displayResult({
+            title: item.titleName,
+            type: answers.type === 'webtoon' ? '웹툰' : '웹툰 (기반 소설 추천)',
+            genre: answers.genre,
+            desc: `${item.author} 작가의 작품입니다. 현재 별점 ${item.starScore}점을 기록하고 있어요!`,
+            link: `https://comic.naver.com/webtoon/list?titleId=${item.titleId}`,
+            img: item.thumbnailUrl
+        });
+    } catch (error) {
+        console.error('Fetch error:', error);
+        // 에러 시 기존 하드코딩 데이터 중 하나 보여주기 (Fallback)
+        displayResult({
+            title: "전지적 독자 시점",
+            type: "웹툰",
+            genre: "판타지",
+            desc: "데이터를 가져오는 중 오류가 발생했습니다. 하지만 이 작품은 정말 추천해요!",
+            link: "https://comic.naver.com/webtoon/list?titleId=747269",
+            img: "https://shared-comic.pstatic.net/thumb/webtoon/747269/thumbnail/thumbnail_IMAG21_3902319088661706680.jpg"
+        });
+    }
+}
+
+function displayResult(result) {
     quizContainer.classList.add('hidden');
     quizHeader.classList.add('hidden');
     resultContainer.classList.remove('hidden');
 
-    const scores = DATA.map(item => {
-        let score = 0;
-        if (item.type === answers.type) score += 5;
-        if (item.genre === answers.genre) score += 3;
-        if (item.mood === answers.mood) score += 2;
-        return { ...item, score };
-    });
-
-    const bestMatch = scores.sort((a, b) => b.score - a.score)[0];
-
     resultContainer.innerHTML = `
         <div class="result-card">
             <div class="thumbnail-wrapper">
-                <img src="${bestMatch.img}" alt="${bestMatch.title}" class="result-img" onerror="this.src='https://via.placeholder.com/300x400?text=이미지+준비중'">
+                <img src="${result.img}" alt="${result.title}" class="result-img" referrerpolicy="no-referrer">
             </div>
-            <span class="result-tag">${bestMatch.type === 'webtoon' ? '웹툰' : '소설'} | ${bestMatch.genre}</span>
-            <h2 class="result-title">${bestMatch.title}</h2>
-            <p class="result-desc">${bestMatch.desc}</p>
+            <span class="result-tag">${result.type} | ${result.genre}</span>
+            <h2 class="result-title">${result.title}</h2>
+            <p class="result-desc">${result.desc}</p>
             <div class="btn-group">
-                <a href="${bestMatch.link}" target="_blank" class="primary-btn">작품 바로가기</a>
+                <a href="${result.link}" target="_blank" class="primary-btn">작품 바로가기</a>
                 <button onclick="resetQuiz()" class="secondary-btn">다시 하기</button>
             </div>
         </div>
