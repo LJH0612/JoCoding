@@ -154,3 +154,24 @@ h1 {
     background-color: rgba(255, 255, 255, 0.05);
     color: var(--text-primary);
 }
+
+/* 썸네일 스타일 추가 */
+.thumbnail-wrapper {
+    width: 100%;
+    max-width: 200px;
+    margin: 0 auto 1.5rem;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+}
+
+.result-img {
+    width: 100%;
+    height: auto;
+    display: block;
+    transition: transform 0.3s;
+}
+
+.result-card:hover .result-img {
+    transform: scale(1.05);
+}
