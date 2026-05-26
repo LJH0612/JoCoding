@@ -1,0 +1,78 @@
+body {
+    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+    background-color: #f0f2f5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+}
+
+.container {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    text-align: center;
+    width: 90%;
+    max-width: 500px;
+}
+
+h1 {
+    color: #333;
+    margin-bottom: 1.5rem;
+}
+
+button {
+    background-color: #4a90e2;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    font-size: 1.1rem;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+    margin-bottom: 2rem;
+}
+
+button:hover {
+    background-color: #357abd;
+}
+
+button:active {
+    transform: scale(0.98);
+}
+
+.lotto-set {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 15px;
+    padding: 10px;
+    background-color: #f8f9fa;
+    border-radius: 12px;
+    animation: fadeIn 0.5s ease-out forwards;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.ball {
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    border-radius: 50%;
+    color: white;
+    font-weight: bold;
+    font-size: 0.9rem;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+}
+
+/* 로또 번호 대역별 색상 */
+.ball-1 { background-color: #fbc400; } /* 1-10: 노랑 */
+.ball-11 { background-color: #69c8f2; } /* 11-20: 파랑 */
+.ball-21 { background-color: #ff7272; } /* 21-30: 빨강 */
+.ball-31 { background-color: #aaa; }    /* 31-40: 회색 */
+.ball-41 { background-color: #b0d840; } /* 41-45: 초록 */
