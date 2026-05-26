@@ -107,7 +107,7 @@ const steps = [
         ]
     },
     {
-        question: "지금 기분은 어떠신가요?",
+        question: "어떤 분위기의 이야기를 원하시나요?",
         key: "mood",
         options: [
             { label: "강렬하고 몰입감 있는", value: "intense" },
